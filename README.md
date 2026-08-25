@@ -1,8 +1,9 @@
-# Super Admin Portal — React + TypeScript + Tailwind CSS
+# Super Admin Portal
 
 Frontend-only implementation of the **Super Admin Portal – Global Dashboard & Tenant Management** assignment.
 
 The assignment requires:
+
 - Global Dashboard
 - Tenant Management
 - Search
@@ -26,64 +27,6 @@ This version intentionally has **no backend**. Tenant data is defined in a TypeS
 - React Router
 - TanStack Query
 - Recharts
-- Axios is not required because this version has no HTTP backend
-
-## Run
-
-```bash
-npm install
-npm run dev
-```
-
-Open the URL shown by Vite, normally:
-
-```text
-http://localhost:5173
-```
-
-## Main frontend concepts
-
-```text
-UI
- ↓
-Custom TanStack Query hooks
- ↓
-Local data service
- ↓
-Defined tenant array
-```
-
-Later, replacing the data-service functions with Axios/fetch calls is enough to move toward a real backend.
-
-## Important TanStack Query flow
-
-```text
-Create / Update / Activate / Deactivate
-              ↓
-          Mutation
-              ↓
-       Local data changes
-              ↓
-     invalidateQueries()
-              ↓
-        Query refetches
-              ↓
-          UI updates
-```
-
-## Data location
-
-The initial tenant data is in:
-
-```text
-src/data/tenants.ts
-```
-
-The simulated CRUD operations are in:
-
-```text
-src/services/tenantService.ts
-```
 
 ## Main hooks
 
