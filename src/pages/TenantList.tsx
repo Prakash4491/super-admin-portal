@@ -7,7 +7,7 @@ import TenantTable from "../components/TenantTable";
 import {
   useActivateTenant,
   useDeactivateTenant,
-  useTenants
+  useTenants,
 } from "../hooks/useTenants";
 import type { Plan, Tenant } from "../types";
 
@@ -28,14 +28,15 @@ export default function TenantList() {
     page,
     size: PAGE_SIZE,
     sortBy,
-    sortDir
+    sortDir,
   });
 
   const activate = useActivateTenant();
   const deactivate = useDeactivateTenant();
 
   if (query.isPending) return <Loading text="Loading tenants..." />;
-  if (query.isError) return <ErrorState error={query.error} onRetry={query.refetch} />;
+  if (query.isError)
+    return <ErrorState error={query.error} onRetry={query.refetch} />;
 
   function handleSort(field: keyof Tenant) {
     setPage(0);
@@ -58,7 +59,9 @@ export default function TenantList() {
     <div className="space-y-5">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="text-2xl font-extrabold tracking-tight">Tenant Management</h2>
+          <h2 className="text-2xl font-extrabold tracking-tight">
+            Tenant Management
+          </h2>
           <p className="mt-1 text-sm text-slate-500">
             Search, filter and manage all platform tenants.
           </p>
@@ -125,8 +128,12 @@ export default function TenantList() {
           onSort={handleSort}
           onActivate={(id) => activate.mutate(id)}
           onDeactivate={(id) => deactivate.mutate(id)}
-          activatingId={activate.isPending ? activate.variables ?? null : null}
-          deactivatingId={deactivate.isPending ? deactivate.variables ?? null : null}
+          activatingId={
+            activate.isPending ? (activate.variables ?? null) : null
+          }
+          deactivatingId={
+            deactivate.isPending ? (deactivate.variables ?? null) : null
+          }
         />
 
         <div className="flex flex-col gap-3 border-t border-line p-4 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">

@@ -7,7 +7,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 import {
   Activity,
@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   PauseCircle,
   Users,
-  ShieldCheck
+  ShieldCheck,
 } from "lucide-react";
 import KpiCard from "../components/KpiCard";
 import Loading from "../components/Loading";
@@ -24,7 +24,7 @@ import {
   useDashboardActivities,
   useDashboardAnalytics,
   useDashboardHealth,
-  useDashboardKpis
+  useDashboardKpis,
 } from "../hooks/useDashboard";
 
 export default function Dashboard() {
@@ -34,23 +34,55 @@ export default function Dashboard() {
   const activities = useDashboardActivities();
 
   if (kpis.isPending) return <Loading text="Loading dashboard..." />;
-  if (kpis.isError) return <ErrorState error={kpis.error} onRetry={kpis.refetch} />;
+  if (kpis.isError)
+    return <ErrorState error={kpis.error} onRetry={kpis.refetch} />;
 
   return (
     <div className="space-y-6">
       <PageHeading />
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <KpiCard label="Total Tenants" value={kpis.data.totalTenants} hint="All registered tenants" icon={<Building2 size={18} />} />
-        <KpiCard label="Active Tenants" value={kpis.data.activeTenants} hint="Currently enabled" icon={<CheckCircle2 size={18} />} />
-        <KpiCard label="Inactive Tenants" value={kpis.data.inactiveTenants} hint="Currently disabled" icon={<PauseCircle size={18} />} />
-        <KpiCard label="Total Users" value={kpis.data.totalUsers.toLocaleString()} hint="Across all tenants" icon={<Users size={18} />} />
-        <KpiCard label="Active Licenses" value={kpis.data.activeLicenses} hint="Current subscriptions" icon={<ShieldCheck size={18} />} />
+        <KpiCard
+          label="Total Tenants"
+          value={kpis.data.totalTenants}
+          hint="All registered tenants"
+          icon={<Building2 size={18} />}
+        />
+        <KpiCard
+          label="Active Tenants"
+          value={kpis.data.activeTenants}
+          hint="Currently enabled"
+          icon={<CheckCircle2 size={18} />}
+        />
+        <KpiCard
+          label="Inactive Tenants"
+          value={kpis.data.inactiveTenants}
+          hint="Currently disabled"
+          icon={<PauseCircle size={18} />}
+        />
+        <KpiCard
+          label="Total Users"
+          value={kpis.data.totalUsers.toLocaleString()}
+          hint="Across all tenants"
+          icon={<Users size={18} />}
+        />
+        <KpiCard
+          label="Active Licenses"
+          value={kpis.data.activeLicenses}
+          hint="Current subscriptions"
+          icon={<ShieldCheck size={18} />}
+        />
       </section>
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-        <ChartPanel title="Tenant Growth" subtitle="Platform tenant growth over time" className="xl:col-span-2">
-          {analytics.isPending ? <Loading /> : (
+        <ChartPanel
+          title="Tenant Growth"
+          subtitle="Platform tenant growth over time"
+          className="xl:col-span-2"
+        >
+          {analytics.isPending ? (
+            <Loading />
+          ) : (
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={analytics.data.tenantGrowth}>
@@ -58,7 +90,12 @@ export default function Dashboard() {
                   <XAxis dataKey="month" fontSize={11} />
                   <YAxis fontSize={11} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="tenants" strokeWidth={3} />
+                  <Line
+                    type="monotone"
+                    dataKey="tenants"
+                    stroke="#3b82f6"
+                    strokeWidth={3}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -66,7 +103,9 @@ export default function Dashboard() {
         </ChartPanel>
 
         <ChartPanel title="Tenant Status" subtitle="Active vs inactive tenants">
-          {analytics.isPending ? <Loading /> : (
+          {analytics.isPending ? (
+            <Loading />
+          ) : (
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={analytics.data.statusBreakdown}>
@@ -74,17 +113,14 @@ export default function Dashboard() {
                   <XAxis dataKey="status" fontSize={10} />
                   <YAxis fontSize={11} />
                   <Tooltip />
-                  <Bar dataKey="count" />
+                  <Bar dataKey="count" fill="#3b82f6" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           )}
         </ChartPanel>
 
-        <HealthCard
-          loading={health.isPending}
-          data={health.data}
-        />
+        <HealthCard loading={health.isPending} data={health.data} />
 
         <ActivitiesCard
           loading={activities.isPending}
@@ -99,12 +135,14 @@ function PageHeading() {
   return (
     <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div>
-        <h2 className="text-2xl font-extrabold tracking-tight">Global Dashboard</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <h2 className="text-2xl font-extrabold text-red-500 tracking-tight">
+          GLOBAL DASHBOARD
+        </h2>
+        <p className="mt-1 font-extrabold text-sm text-black-500">
           Monitor the health and activity of the entire platform.
         </p>
       </div>
-      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[11px] font-bold text-emerald-700">
+      <span className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-100 px-3 py-1.5 text-[11px] font-bold text-emerald-700">
         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
         Live
       </span>
@@ -116,7 +154,7 @@ function ChartPanel({
   title,
   subtitle,
   children,
-  className = ""
+  className = "",
 }: {
   title: string;
   subtitle: string;
@@ -136,7 +174,7 @@ function ChartPanel({
 
 function HealthCard({
   loading,
-  data
+  data,
 }: {
   loading: boolean;
   data:
@@ -192,7 +230,10 @@ function Progress({ label, value }: { label: string; value: number }) {
         <strong>{value}%</strong>
       </div>
       <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
-        <div className="h-full rounded-full bg-slate-600" style={{ width: `${value}%` }} />
+        <div
+          className="h-full rounded-full bg-blue-600"
+          style={{ width: `${value}%` }}
+        />
       </div>
     </div>
   );
@@ -200,7 +241,7 @@ function Progress({ label, value }: { label: string; value: number }) {
 
 function ActivitiesCard({
   loading,
-  activities
+  activities,
 }: {
   loading: boolean;
   activities: Array<{
