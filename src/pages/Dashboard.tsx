@@ -80,7 +80,7 @@ export default function Dashboard() {
           subtitle="Platform tenant growth over time"
           className="xl:col-span-2"
         >
-          {analytics.isPending ? (
+          {analytics.isPending || !analytics.data ? (
             <Loading />
           ) : (
             <div className="h-72">
@@ -103,7 +103,7 @@ export default function Dashboard() {
         </ChartPanel>
 
         <ChartPanel title="Tenant Status" subtitle="Active vs inactive tenants">
-          {analytics.isPending ? (
+          {analytics.isPending || !analytics.data ? (
             <Loading />
           ) : (
             <div className="h-72">
