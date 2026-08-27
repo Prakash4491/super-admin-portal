@@ -260,7 +260,7 @@ function ActivitiesCard({
       {loading ? (
         <Loading />
       ) : (
-        <div className="divide-y divide-slate-100 px-5">
+        <div className="divide-y divide-slate-100 px-5 pb-20">
           {activities.map((activity) => (
             <div key={activity.id} className="flex gap-3 py-4">
               <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-slate-100">
