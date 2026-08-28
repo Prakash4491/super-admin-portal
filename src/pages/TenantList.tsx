@@ -60,7 +60,7 @@ export default function TenantList() {
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h2 className="text-2xl font-extrabold text-red-500 tracking-tight">
-            Tenant Management
+            TENANT MANAGEMENT
           </h2>
           <p className="mt-1 font-extrabold text-sm text-black-500">
             Search, filter and manage all platform tenants.
