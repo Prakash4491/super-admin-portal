@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Building2, LayoutDashboard, Menu, X } from "lucide-react";
+import { Users } from "lucide-react";
 
 export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,6 +36,14 @@ export default function Layout() {
             label="Tenants"
           />
         </nav>
+
+        <NavItem
+          to="/organizations"
+          icon={<Building2 size={17} />}
+          label="Organizations"
+        />
+
+        <NavItem to="/users" icon={<Users size={17} />} label="Users" />
 
         <div className="mt-auto flex items-center gap-2 px-2 text-xs text-slate-300">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -95,6 +104,19 @@ export default function Layout() {
                 onClick={() => setMobileMenuOpen(false)}
               />
             </nav>
+
+            <NavItem
+              to="/organizations"
+              icon={<Building2 size={17} />}
+              label="Organizations"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <NavItem
+              to="/users"
+              icon={<Users size={17} />}
+              label="Users"
+              onClick={() => setMobileMenuOpen(false)}
+            />
 
             {/* Platform Status */}
             <div className="absolute bottom-6 left-5 flex items-center gap-2 text-xs text-slate-300">
