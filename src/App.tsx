@@ -8,7 +8,13 @@ import OrganizationList from "./pages/OrganizationList";
 import OrganizationDetails from "./pages/OrganizationDetails";
 import UserList from "./pages/UserList";
 import UserDetails from "./pages/UserDetails";
-
+import RoleList from "./pages/RoleList";
+import RoleDetails from "./pages/RoleDetails";
+import PermissionList from "./pages/PermissionList";
+import PermissionDetails from "./pages/PermissionDetails";
+import DataPermissions from "./pages/DataPermissions";
+import DataPermissionDetails from "./pages/DataPermissionDetails";
+import PlatformConfiguration from "./pages/PlatformConfiguration";
 export default function App() {
   return (
     <Routes>
@@ -22,8 +28,20 @@ export default function App() {
         <Route path="/organizations/:id" element={<OrganizationDetails />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/users/:id" element={<UserDetails />} />
+        <Route path="/roles" element={<RoleList />} />
+        <Route path="/roles/:id" element={<RoleDetails />} />
+        <Route path="/permissions" element={<PermissionList />} />
+        <Route path="/permissions/:id" element={<PermissionDetails />} />
+        <Route path="/dataPermissions" element={<DataPermissions />} />
+        <Route
+          path="/platform-configuration"
+          element={<PlatformConfiguration />}
+        />
+        <Route
+          path="/dataPermissions/:id"
+          element={<DataPermissionDetails />}
+        />
       </Route>
-
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -1,7 +1,5 @@
 import type { Organization } from "../types";
-
 export const initialOrganizations: Organization[] = [
-  // Acme Corporation - 8 organizations
   {
     id: 1,
     tenantId: 1,
@@ -90,8 +88,6 @@ export const initialOrganizations: Organization[] = [
     users: 22,
     createdAt: "04 Aug 2026",
   },
-
-  // TechNova - 5 organizations
   {
     id: 9,
     tenantId: 2,
@@ -147,8 +143,6 @@ export const initialOrganizations: Organization[] = [
     users: 24,
     createdAt: "07 Aug 2026",
   },
-
-  // Alpha Ltd - 2 organizations
   {
     id: 14,
     tenantId: 3,
@@ -171,8 +165,6 @@ export const initialOrganizations: Organization[] = [
     users: 21,
     createdAt: "10 Aug 2026",
   },
-
-  // BluePeak Systems - 11 organizations
   {
     id: 16,
     tenantId: 4,
@@ -294,8 +286,6 @@ export const initialOrganizations: Organization[] = [
     users: 22,
     createdAt: "14 Aug 2026",
   },
-
-  // CloudBridge - 4 organizations
   {
     id: 27,
     tenantId: 5,
@@ -340,8 +330,6 @@ export const initialOrganizations: Organization[] = [
     users: 19,
     createdAt: "13 Aug 2026",
   },
-
-  // Delta Works - 3 organizations
   {
     id: 31,
     tenantId: 6,
@@ -375,8 +363,6 @@ export const initialOrganizations: Organization[] = [
     users: 15,
     createdAt: "14 Aug 2026",
   },
-
-  // Evergreen Labs - 6 organizations
   {
     id: 34,
     tenantId: 7,
@@ -443,8 +429,6 @@ export const initialOrganizations: Organization[] = [
     users: 12,
     createdAt: "16 Aug 2026",
   },
-
-  // Fusion Retail - 14 organizations
   {
     id: 40,
     tenantId: 8,
@@ -599,8 +583,6 @@ export const initialOrganizations: Organization[] = [
     users: 16,
     createdAt: "18 Aug 2026",
   },
-
-  // GreenField Finance - 9 organizations
   {
     id: 54,
     tenantId: 9,
@@ -700,8 +682,6 @@ export const initialOrganizations: Organization[] = [
     users: 21,
     createdAt: "18 Aug 2026",
   },
-
-  // Horizon Media - 4 organizations
   {
     id: 63,
     tenantId: 10,
@@ -746,8 +726,6 @@ export const initialOrganizations: Organization[] = [
     users: 13,
     createdAt: "18 Aug 2026",
   },
-
-  // Insight Technologies - 7 organizations
   {
     id: 67,
     tenantId: 11,
@@ -825,8 +803,6 @@ export const initialOrganizations: Organization[] = [
     users: 16,
     createdAt: "18 Aug 2026",
   },
-
-  // Jupiter Logistics - 3 organizations
   {
     id: 74,
     tenantId: 12,

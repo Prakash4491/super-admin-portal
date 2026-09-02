@@ -1,34 +1,35 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Edit3, Power, Users, Building2, HardDrive } from "lucide-react";
+import {
+  ArrowLeft,
+  Edit3,
+  Power,
+  Users,
+  Building2,
+  HardDrive,
+} from "lucide-react";
 import Loading from "../components/Loading";
 import ErrorState from "../components/ErrorState";
 import {
   useActivateTenant,
   useDeactivateTenant,
   useTenant,
-  useTenantStats
+  useTenantStats,
 } from "../hooks/useTenants";
-
 export default function TenantDetails() {
   const { id } = useParams();
   const tenantId = Number(id);
   const navigate = useNavigate();
-
   const tenant = useTenant(tenantId);
   const stats = useTenantStats(tenantId);
   const activate = useActivateTenant();
   const deactivate = useDeactivateTenant();
-
   if (tenant.isPending || stats.isPending) {
     return <Loading text="Loading tenant details..." />;
   }
-
   if (tenant.isError) {
     return <ErrorState error={tenant.error} onRetry={tenant.refetch} />;
   }
-
   const data = tenant.data;
-
   async function toggleStatus() {
     if (data.status === "ACTIVE") {
       await deactivate.mutateAsync(tenantId);
@@ -36,9 +37,7 @@ export default function TenantDetails() {
       await activate.mutateAsync(tenantId);
     }
   }
-
   const isChanging = activate.isPending || deactivate.isPending;
-
   return (
     <div className="space-y-5">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -50,20 +49,19 @@ export default function TenantDetails() {
             <ArrowLeft size={13} />
             Back to tenants
           </Link>
-
-          <h2 className="text-2xl font-extrabold tracking-tight">{data.name}</h2>
+          <h2 className="text-2xl font-extrabold tracking-tight">
+            {data.name}
+          </h2>
           <p className="mt-1 flex items-center gap-2 text-xs text-slate-500">
             <span className="font-mono">{data.code}</span>
             <StatusBadge status={data.status} />
           </p>
         </div>
-
         <div className="flex flex-wrap gap-2">
           <Link to={`/tenants/${tenantId}/edit`} className="btn btn-secondary">
             <Edit3 size={14} />
             Edit Tenant
           </Link>
-
           <button
             className={`btn ${
               data.status === "ACTIVE" ? "btn-danger" : "btn-success"
@@ -80,7 +78,6 @@ export default function TenantDetails() {
           </button>
         </div>
       </div>
-
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <section className="panel">
           <div className="border-b border-line p-5">
@@ -96,23 +93,37 @@ export default function TenantDetails() {
             <Detail label="Time Zone" value={data.timeZone} />
           </div>
         </section>
-
         <section className="panel">
           <div className="border-b border-line p-5">
             <h3 className="text-sm font-extrabold">Statistics</h3>
           </div>
           <div className="grid grid-cols-2 gap-3 p-5">
-            <Stat icon={<Users size={16} />} label="Users" value={stats.data?.users ?? 0} />
-            <Stat icon={<Building2 size={16} />} label="Organizations" value={stats.data?.organizations ?? 0} />
-            <Stat icon={<Users size={16} />} label="Active Users" value={stats.data?.activeUsers ?? 0} />
-            <Stat icon={<HardDrive size={16} />} label="Storage" value={`${stats.data?.storage ?? 0}%`} />
+            <Stat
+              icon={<Users size={16} />}
+              label="Users"
+              value={stats.data?.users ?? 0}
+            />
+            <Stat
+              icon={<Building2 size={16} />}
+              label="Organizations"
+              value={stats.data?.organizations ?? 0}
+            />
+            <Stat
+              icon={<Users size={16} />}
+              label="Active Users"
+              value={stats.data?.activeUsers ?? 0}
+            />
+            <Stat
+              icon={<HardDrive size={16} />}
+              label="Storage"
+              value={`${stats.data?.storage ?? 0}%`}
+            />
           </div>
         </section>
       </div>
     </div>
   );
 }
-
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-5 py-4 text-xs">
@@ -121,11 +132,10 @@ function Detail({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
 function Stat({
   icon,
   label,
-  value
+  value,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -141,7 +151,6 @@ function Stat({
     </div>
   );
 }
-
 function StatusBadge({ status }: { status: "ACTIVE" | "INACTIVE" }) {
   return (
     <span

@@ -9,7 +9,6 @@ import {
   updateTenant,
 } from "../services/tenantService";
 import type { TenantFormValues, TenantListParams } from "../types";
-
 export const tenantKeys = {
   all: ["tenants"] as const,
   lists: () => [...tenantKeys.all, "list"] as const,
@@ -18,7 +17,6 @@ export const tenantKeys = {
   detail: (id: number) => [...tenantKeys.details(), id] as const,
   stats: (id: number) => [...tenantKeys.all, "stats", id] as const,
 };
-
 export function useTenants(params: TenantListParams) {
   return useQuery({
     queryKey: tenantKeys.list(params),
@@ -26,7 +24,6 @@ export function useTenants(params: TenantListParams) {
     placeholderData: (previous) => previous,
   });
 }
-
 export function useTenant(id: number) {
   return useQuery({
     queryKey: tenantKeys.detail(id),
@@ -34,7 +31,6 @@ export function useTenant(id: number) {
     enabled: Boolean(id),
   });
 }
-
 export function useTenantStats(id: number) {
   return useQuery({
     queryKey: tenantKeys.stats(id),
@@ -42,10 +38,8 @@ export function useTenantStats(id: number) {
     enabled: Boolean(id),
   });
 }
-
 export function useCreateTenant() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (values: TenantFormValues) => createTenant(values),
     onSuccess: () => {
@@ -57,10 +51,8 @@ export function useCreateTenant() {
     },
   });
 }
-
 export function useUpdateTenant() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       id,
@@ -74,7 +66,6 @@ export function useUpdateTenant() {
         tenantKeys.detail(updatedTenant.id),
         updatedTenant,
       );
-
       queryClient.invalidateQueries({ queryKey: tenantKeys.lists() });
       queryClient.invalidateQueries({
         queryKey: ["dashboard", "activities"],
@@ -83,10 +74,8 @@ export function useUpdateTenant() {
     },
   });
 }
-
 export function useActivateTenant() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: activateTenant,
     onSuccess: (updatedTenant) => {
@@ -94,7 +83,6 @@ export function useActivateTenant() {
         tenantKeys.detail(updatedTenant.id),
         updatedTenant,
       );
-
       queryClient.invalidateQueries({ queryKey: tenantKeys.lists() });
       queryClient.invalidateQueries({
         queryKey: tenantKeys.stats(updatedTenant.id),
@@ -106,10 +94,8 @@ export function useActivateTenant() {
     },
   });
 }
-
 export function useDeactivateTenant() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: deactivateTenant,
     onSuccess: (updatedTenant) => {
@@ -117,7 +103,6 @@ export function useDeactivateTenant() {
         tenantKeys.detail(updatedTenant.id),
         updatedTenant,
       );
-
       queryClient.invalidateQueries({ queryKey: tenantKeys.lists() });
       queryClient.invalidateQueries({
         queryKey: tenantKeys.stats(updatedTenant.id),

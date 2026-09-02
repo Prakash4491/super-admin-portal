@@ -12,10 +12,8 @@ import {
   Search,
   XCircle,
 } from "lucide-react";
-
 import Loading from "../components/Loading";
 import ErrorState from "../components/ErrorState";
-
 import {
   useActivateOrganization,
   useCreateOrganization,
@@ -23,18 +21,14 @@ import {
   useOrganizations,
   useUpdateOrganization,
 } from "../hooks/useOrganizations";
-
 import type {
   Organization,
   OrganizationFormValues,
   OrganizationListParams,
   OrganizationStatus,
 } from "../types";
-
 import { initialTenants } from "../data/tenants";
-
 const PAGE_SIZE = 8;
-
 const defaultParams: OrganizationListParams = {
   search: "",
   status: "",
@@ -44,14 +38,12 @@ const defaultParams: OrganizationListParams = {
   sortBy: "name",
   sortDir: "asc",
 };
-
 export default function OrganizationList() {
   const navigate = useNavigate();
   const [params, setParams] = useState<OrganizationListParams>(defaultParams);
   const [editingOrganization, setEditingOrganization] =
     useState<Organization | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-
   const [form, setForm] = useState({
     tenantId: "",
     name: "",
@@ -59,20 +51,17 @@ export default function OrganizationList() {
     description: "",
     status: "ACTIVE" as OrganizationStatus,
   });
-
   const createMutation = useCreateOrganization();
   const organizations = useOrganizations(params);
   const activateMutation = useActivateOrganization();
   const deactivateMutation = useDeactivateOrganization();
   const updateMutation = useUpdateOrganization();
-
   const resetPage = () => {
     setParams((current) => ({
       ...current,
       page: 0,
     }));
   };
-
   const handleSearch = (value: string) => {
     setParams((current) => ({
       ...current,
@@ -80,7 +69,6 @@ export default function OrganizationList() {
       page: 0,
     }));
   };
-
   const handleStatusChange = (value: OrganizationStatus | "") => {
     setParams((current) => ({
       ...current,
@@ -88,7 +76,6 @@ export default function OrganizationList() {
       page: 0,
     }));
   };
-
   const handleTenantChange = (value: string) => {
     setParams((current) => ({
       ...current,
@@ -96,7 +83,6 @@ export default function OrganizationList() {
       page: 0,
     }));
   };
-
   const handleSort = (field: OrganizationListParams["sortBy"]) => {
     setParams((current) => ({
       ...current,
@@ -105,33 +91,26 @@ export default function OrganizationList() {
         current.sortBy === field && current.sortDir === "asc" ? "desc" : "asc",
     }));
   };
-
   if (organizations.isPending) {
     return <Loading text="Loading organizations..." />;
   }
-
   if (organizations.isError) {
     return (
       <ErrorState error={organizations.error} onRetry={organizations.refetch} />
     );
   }
-
   const data = organizations.data;
-
   return (
     <div className="space-y-6">
-      {/* Page heading */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <h2 className="text-2xl font-extrabold text-red-500 tracking-tight">
             ORGANIZATION MANAGEMENT
           </h2>
-
           <p className="mt-1 font-extrabold text-sm text-black-500">
             Manage organizations across all tenants.{" "}
           </p>
         </div>
-
         <button
           type="button"
           onClick={() => setShowCreateForm(true)}
@@ -141,7 +120,6 @@ export default function OrganizationList() {
           Create Organization
         </button>
       </div>
-
       {showCreateForm && (
         <CreateOrganizationModal
           form={form}
@@ -150,7 +128,6 @@ export default function OrganizationList() {
           error={createMutation.error}
           onClose={() => {
             setShowCreateForm(false);
-
             setForm({
               tenantId: "",
               name: "",
@@ -163,7 +140,6 @@ export default function OrganizationList() {
             if (!form.tenantId || !form.name.trim() || !form.code.trim()) {
               return;
             }
-
             try {
               await createMutation.mutateAsync({
                 tenantId: Number(form.tenantId),
@@ -172,9 +148,7 @@ export default function OrganizationList() {
                 description: form.description,
                 status: form.status,
               });
-
               setShowCreateForm(false);
-
               setForm({
                 tenantId: "",
                 name: "",
@@ -182,13 +156,10 @@ export default function OrganizationList() {
                 description: "",
                 status: "ACTIVE",
               });
-            } catch {
-              // Error is displayed inside the modal.
-            }
+            } catch {}
           }}
         />
       )}
-
       {editingOrganization && (
         <EditOrganizationModal
           organization={editingOrganization}
@@ -203,24 +174,18 @@ export default function OrganizationList() {
                 id: editingOrganization.id,
                 values,
               });
-
               setEditingOrganization(null);
-            } catch {
-              // Error is displayed inside the modal.
-            }
+            } catch {}
           }}
         />
       )}
-      {/* Filters */}
       <section className="panel p-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          {/* Search */}
           <div className="relative">
             <Search
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
-
             <input
               value={params.search}
               onChange={(event) => handleSearch(event.target.value)}
@@ -228,23 +193,18 @@ export default function OrganizationList() {
               className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none focus:border-blue-400"
             />
           </div>
-
-          {/* Tenant filter */}
           <select
             value={params.tenantId}
             onChange={(event) => handleTenantChange(event.target.value)}
             className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-400"
           >
             <option value="">All Tenants</option>
-
             {initialTenants.map((tenant) => (
               <option key={tenant.id} value={tenant.id}>
                 {tenant.name}
               </option>
             ))}
           </select>
-
-          {/* Status filter */}
           <select
             value={params.status}
             onChange={(event) =>
@@ -258,8 +218,6 @@ export default function OrganizationList() {
           </select>
         </div>
       </section>
-
-      {/* Organization table */}
       <section className="panel overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[850px]">
@@ -269,35 +227,28 @@ export default function OrganizationList() {
                   label="Organization"
                   onClick={() => handleSort("name")}
                 />
-
                 <TableHeader
                   label="Tenant"
                   onClick={() => handleSort("tenantName")}
                 />
-
                 <TableHeader label="Code" onClick={() => handleSort("code")} />
-
                 <TableHeader
                   label="Users"
                   onClick={() => handleSort("users")}
                 />
-
                 <TableHeader
                   label="Status"
                   onClick={() => handleSort("status")}
                 />
-
                 <TableHeader
                   label="Created"
                   onClick={() => handleSort("createdAt")}
                 />
-
                 <th className="px-4 py-3 text-left text-xs font-bold text-slate-500">
                   Actions
                 </th>
               </tr>
             </thead>
-
             <tbody className="divide-y divide-slate-100">
               {data.content.length === 0 ? (
                 <tr>
@@ -311,53 +262,38 @@ export default function OrganizationList() {
               ) : (
                 data.content.map((organization) => (
                   <tr key={organization.id} className="hover:bg-slate-50">
-                    {/* Organization */}
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-blue-50 text-blue-600">
                           <Building2 size={17} />
                         </div>
-
                         <div>
                           <strong className="block text-sm">
                             {organization.name}
                           </strong>
-
                           <span className="text-xs text-slate-400">
                             {organization.description}
                           </span>
                         </div>
                       </div>
                     </td>
-
-                    {/* Tenant */}
                     <td className="px-4 py-4 text-sm">
                       {organization.tenantName}
                     </td>
-
-                    {/* Code */}
                     <td className="px-4 py-4">
                       <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-bold">
                         {organization.code}
                       </span>
                     </td>
-
-                    {/* Users */}
                     <td className="px-4 py-4 text-sm font-semibold">
                       {organization.users}
                     </td>
-
-                    {/* Status */}
                     <td className="px-4 py-4">
                       <StatusBadge status={organization.status} />
                     </td>
-
-                    {/* Created */}
                     <td className="px-4 py-4 text-xs text-slate-500">
                       {organization.createdAt}
                     </td>
-
-                    {/* Actions */}
                     <td className="px-4 py-4 align-middle">
                       <div className="flex flex-wrap items-center gap-2">
                         <button
@@ -377,7 +313,6 @@ export default function OrganizationList() {
                         >
                           <Pencil size={15} />
                         </button>
-
                         {organization.status === "ACTIVE" ? (
                           <button
                             type="button"
@@ -411,8 +346,6 @@ export default function OrganizationList() {
             </tbody>
           </table>
         </div>
-
-        {/* Pagination */}
         <div className="flex flex-col gap-3 border-t border-slate-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-xs text-slate-500">
             Showing{" "}
@@ -420,7 +353,6 @@ export default function OrganizationList() {
             {Math.min((params.page + 1) * params.size, data.totalElements)} of{" "}
             {data.totalElements}
           </span>
-
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -436,11 +368,9 @@ export default function OrganizationList() {
               <ChevronLeft size={15} />
               Previous
             </button>
-
             <span className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-bold text-white">
               {params.page + 1}
             </span>
-
             <button
               type="button"
               disabled={params.page >= data.totalPages - 1}
@@ -461,7 +391,6 @@ export default function OrganizationList() {
     </div>
   );
 }
-
 function TableHeader({
   label,
   onClick,
@@ -481,10 +410,8 @@ function TableHeader({
     </th>
   );
 }
-
 function StatusBadge({ status }: { status: OrganizationStatus }) {
   const active = status === "ACTIVE";
-
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold ${
@@ -496,12 +423,10 @@ function StatusBadge({ status }: { status: OrganizationStatus }) {
           active ? "bg-emerald-500" : "bg-red-500"
         }`}
       />
-
       {active ? "Active" : "Inactive"}
     </span>
   );
 }
-
 function CreateOrganizationModal({
   form,
   setForm,
@@ -517,7 +442,6 @@ function CreateOrganizationModal({
     description: string;
     status: OrganizationStatus;
   };
-
   setForm: React.Dispatch<
     React.SetStateAction<{
       tenantId: string;
@@ -527,28 +451,21 @@ function CreateOrganizationModal({
       status: OrganizationStatus;
     }>
   >;
-
   loading: boolean;
-
   error: Error | null;
-
   onClose: () => void;
-
   onSubmit: () => void;
 }) {
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div>
             <h3 className="text-lg font-extrabold">Create Organization</h3>
-
             <p className="mt-1 text-xs text-slate-400">
               Add a new organization to a tenant.
             </p>
           </div>
-
           <button
             type="button"
             onClick={onClose}
@@ -557,15 +474,11 @@ function CreateOrganizationModal({
             ✕
           </button>
         </div>
-
-        {/* Form */}
         <div className="space-y-4 p-5">
-          {/* Tenant */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Tenant
             </label>
-
             <select
               value={form.tenantId}
               onChange={(event) =>
@@ -577,7 +490,6 @@ function CreateOrganizationModal({
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
             >
               <option value="">Select Tenant</option>
-
               {initialTenants.map((tenant) => (
                 <option key={tenant.id} value={tenant.id}>
                   {tenant.name}
@@ -585,13 +497,10 @@ function CreateOrganizationModal({
               ))}
             </select>
           </div>
-
-          {/* Organization name */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Organization Name
             </label>
-
             <input
               value={form.name}
               onChange={(event) =>
@@ -604,13 +513,10 @@ function CreateOrganizationModal({
               className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
             />
           </div>
-
-          {/* Code */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Organization Code
             </label>
-
             <input
               value={form.code}
               onChange={(event) =>
@@ -623,13 +529,10 @@ function CreateOrganizationModal({
               className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm uppercase outline-none focus:border-blue-500"
             />
           </div>
-
-          {/* Description */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Description
             </label>
-
             <textarea
               value={form.description}
               onChange={(event) =>
@@ -643,13 +546,10 @@ function CreateOrganizationModal({
               className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
             />
           </div>
-
-          {/* Status */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Status
             </label>
-
             <select
               value={form.status}
               onChange={(event) =>
@@ -661,20 +561,15 @@ function CreateOrganizationModal({
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
             >
               <option value="ACTIVE">Active</option>
-
               <option value="INACTIVE">Inactive</option>
             </select>
           </div>
-
-          {/* Error */}
           {error && (
             <div className="rounded-lg bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600">
               {error.message}
             </div>
           )}
         </div>
-
-        {/* Footer */}
         <div className="flex justify-end gap-3 border-t border-slate-200 p-5">
           <button
             type="button"
@@ -684,7 +579,6 @@ function CreateOrganizationModal({
           >
             Cancel
           </button>
-
           <button
             type="button"
             onClick={onSubmit}
@@ -698,7 +592,6 @@ function CreateOrganizationModal({
     </div>
   );
 }
-
 function EditOrganizationModal({
   organization,
   loading,
@@ -719,20 +612,16 @@ function EditOrganizationModal({
     description: organization.description,
     status: organization.status,
   });
-
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div>
             <h3 className="text-lg font-extrabold">Edit Organization</h3>
-
             <p className="mt-1 text-xs text-slate-400">
               Update organization configuration.
             </p>
           </div>
-
           <button
             type="button"
             onClick={onClose}
@@ -741,15 +630,11 @@ function EditOrganizationModal({
             ✕
           </button>
         </div>
-
-        {/* Form */}
         <div className="space-y-4 p-5">
-          {/* Tenant */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Tenant
             </label>
-
             <select
               value={form.tenantId}
               onChange={(event) =>
@@ -767,13 +652,10 @@ function EditOrganizationModal({
               ))}
             </select>
           </div>
-
-          {/* Organization name */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Organization Name
             </label>
-
             <input
               value={form.name}
               onChange={(event) =>
@@ -785,30 +667,23 @@ function EditOrganizationModal({
               className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
             />
           </div>
-
-          {/* Code */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Organization Code
             </label>
-
             <input
               value={form.code}
               disabled
               className="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm font-semibold text-slate-500 outline-none"
             />
-
             <p className="mt-1 text-[11px] text-slate-400">
               Organization code cannot be changed.
             </p>
           </div>
-
-          {/* Description */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Description
             </label>
-
             <textarea
               value={form.description}
               onChange={(event) =>
@@ -821,13 +696,10 @@ function EditOrganizationModal({
               className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
             />
           </div>
-
-          {/* Status */}
           <div>
             <label className="mb-1.5 block text-xs font-bold text-slate-600">
               Status
             </label>
-
             <select
               value={form.status}
               onChange={(event) =>
@@ -839,19 +711,15 @@ function EditOrganizationModal({
               className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500"
             >
               <option value="ACTIVE">Active</option>
-
               <option value="INACTIVE">Inactive</option>
             </select>
           </div>
-
           {error && (
             <div className="rounded-lg bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600">
               {error.message}
             </div>
           )}
         </div>
-
-        {/* Footer */}
         <div className="flex justify-end gap-3 border-t border-slate-200 p-5">
           <button
             type="button"
@@ -861,7 +729,6 @@ function EditOrganizationModal({
           >
             Cancel
           </button>
-
           <button
             type="button"
             onClick={() => onSubmit(form)}

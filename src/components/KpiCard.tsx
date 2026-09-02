@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
-
 export default function KpiCard({
   label,
   value,
   hint,
-  icon
+  icon,
 }: {
   label: string;
   value: string | number;

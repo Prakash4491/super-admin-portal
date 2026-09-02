@@ -10,9 +10,7 @@ import {
   useTenants,
 } from "../hooks/useTenants";
 import type { Plan, Tenant } from "../types";
-
 const PAGE_SIZE = 8;
-
 export default function TenantList() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"" | "ACTIVE" | "INACTIVE">("");
@@ -20,7 +18,6 @@ export default function TenantList() {
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState<keyof Tenant>("createdAt");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
-
   const query = useTenants({
     search,
     status,
@@ -30,17 +27,13 @@ export default function TenantList() {
     sortBy,
     sortDir,
   });
-
   const activate = useActivateTenant();
   const deactivate = useDeactivateTenant();
-
   if (query.isPending) return <Loading text="Loading tenants..." />;
   if (query.isError)
     return <ErrorState error={query.error} onRetry={query.refetch} />;
-
   function handleSort(field: keyof Tenant) {
     setPage(0);
-
     if (sortBy === field) {
       setSortDir((current) => (current === "asc" ? "desc" : "asc"));
     } else {
@@ -48,13 +41,10 @@ export default function TenantList() {
       setSortDir("asc");
     }
   }
-
   function resetPage() {
     setPage(0);
   }
-
   const data = query.data;
-
   return (
     <div className="space-y-5">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -71,7 +61,6 @@ export default function TenantList() {
           Create Tenant
         </Link>
       </div>
-
       <section className="panel">
         <div className="flex flex-col gap-3 border-b border-line p-4 md:flex-row">
           <div className="flex flex-1 items-center gap-2 rounded-lg border border-slate-200 px-3">
@@ -86,7 +75,6 @@ export default function TenantList() {
               placeholder="Search tenant name or code..."
             />
           </div>
-
           <select
             className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none"
             value={status}
@@ -99,7 +87,6 @@ export default function TenantList() {
             <option value="ACTIVE">Active</option>
             <option value="INACTIVE">Inactive</option>
           </select>
-
           <select
             className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-xs outline-none"
             value={plan}
@@ -114,13 +101,11 @@ export default function TenantList() {
             <option value="ENTERPRISE">Enterprise</option>
           </select>
         </div>
-
         {query.isFetching && (
           <div className="border-b border-slate-100 px-4 py-2 text-[11px] text-slate-400">
             Refreshing tenant data...
           </div>
         )}
-
         <TenantTable
           tenants={data.content}
           sortBy={sortBy}
@@ -135,12 +120,10 @@ export default function TenantList() {
             deactivate.isPending ? (deactivate.variables ?? null) : null
           }
         />
-
         <div className="flex flex-col gap-3 border-t border-line p-4 text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>
             Showing {data.content.length} of {data.totalElements} tenants
           </span>
-
           <div className="flex flex-wrap gap-1">
             <button
               className="rounded-md border border-slate-200 px-2.5 py-1.5 disabled:opacity-40"
@@ -149,7 +132,6 @@ export default function TenantList() {
             >
               Previous
             </button>
-
             {Array.from({ length: data.totalPages }, (_, index) => (
               <button
                 key={index}
@@ -163,7 +145,6 @@ export default function TenantList() {
                 {index + 1}
               </button>
             ))}
-
             <button
               className="rounded-md border border-slate-200 px-2.5 py-1.5 disabled:opacity-40"
               disabled={page >= data.totalPages - 1}

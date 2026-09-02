@@ -5,10 +5,9 @@ import ErrorState from "../components/ErrorState";
 import {
   useCreateTenant,
   useTenant,
-  useUpdateTenant
+  useUpdateTenant,
 } from "../hooks/useTenants";
 import type { Plan, TenantFormValues, TenantStatus } from "../types";
-
 const emptyForm: TenantFormValues = {
   name: "",
   code: "",
@@ -18,24 +17,19 @@ const emptyForm: TenantFormValues = {
   plan: "ENTERPRISE",
   country: "India",
   timeZone: "Asia/Kolkata",
-  status: "ACTIVE"
+  status: "ACTIVE",
 };
-
 type FormErrors = Partial<Record<keyof TenantFormValues, string>>;
-
 export default function TenantForm() {
   const { id } = useParams();
   const tenantId = Number(id);
   const isEdit = Boolean(id);
   const navigate = useNavigate();
-
   const tenantQuery = useTenant(tenantId);
   const create = useCreateTenant();
   const update = useUpdateTenant();
-
   const [form, setForm] = useState<TenantFormValues>(emptyForm);
   const [errors, setErrors] = useState<FormErrors>({});
-
   useEffect(() => {
     if (tenantQuery.data) {
       setForm({
@@ -47,51 +41,42 @@ export default function TenantForm() {
         plan: tenantQuery.data.plan,
         country: tenantQuery.data.country,
         timeZone: tenantQuery.data.timeZone,
-        status: tenantQuery.data.status
+        status: tenantQuery.data.status,
       });
     }
   }, [tenantQuery.data]);
-
   if (isEdit && tenantQuery.isPending) {
     return <Loading text="Loading tenant..." />;
   }
-
   if (isEdit && tenantQuery.isError) {
-    return <ErrorState error={tenantQuery.error} onRetry={tenantQuery.refetch} />;
+    return (
+      <ErrorState error={tenantQuery.error} onRetry={tenantQuery.refetch} />
+    );
   }
-
   function updateField<K extends keyof TenantFormValues>(
     field: K,
-    value: TenantFormValues[K]
+    value: TenantFormValues[K],
   ) {
     setForm((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
   }
-
   function validate() {
     const next: FormErrors = {};
-
     if (!form.name.trim()) next.name = "Tenant name is required.";
     if (!form.code.trim()) next.code = "Tenant code is required.";
     if (!form.adminName.trim()) next.adminName = "Admin name is required.";
-
     if (!form.adminEmail.trim()) {
       next.adminEmail = "Admin email is required.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.adminEmail)) {
       next.adminEmail = "Enter a valid email.";
     }
-
     if (!form.plan) next.plan = "Subscription is required.";
-
     setErrors(next);
     return Object.keys(next).length === 0;
   }
-
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     if (!validate()) return;
-
     try {
       if (isEdit) {
         await update.mutateAsync({
@@ -104,23 +89,18 @@ export default function TenantForm() {
             plan: form.plan,
             country: form.country,
             timeZone: form.timeZone,
-            status: form.status
-          }
+            status: form.status,
+          },
         });
-
         navigate(`/tenants/${tenantId}`);
       } else {
         const created = await create.mutateAsync(form);
         navigate(`/tenants/${created.id}`);
       }
-    } catch {
-      // Mutation error is displayed below.
-    }
+    } catch {}
   }
-
   const mutationError = create.error ?? update.error;
   const isSaving = create.isPending || update.isPending;
-
   return (
     <div className="space-y-5">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -141,7 +121,6 @@ export default function TenantForm() {
           Cancel
         </Link>
       </div>
-
       <section className="panel p-5 md:p-7">
         <form onSubmit={submit}>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -151,7 +130,6 @@ export default function TenantForm() {
               error={errors.name}
               onChange={(value) => updateField("name", value)}
             />
-
             <TextField
               label="Tenant Code"
               value={form.code}
@@ -159,14 +137,12 @@ export default function TenantForm() {
               disabled={isEdit}
               onChange={(value) => updateField("code", value)}
             />
-
             <TextField
               label="Admin Name"
               value={form.adminName}
               error={errors.adminName}
               onChange={(value) => updateField("adminName", value)}
             />
-
             <TextField
               label="Admin Email"
               type="email"
@@ -174,13 +150,11 @@ export default function TenantForm() {
               error={errors.adminEmail}
               onChange={(value) => updateField("adminEmail", value)}
             />
-
             <TextField
               label="Phone"
               value={form.phone}
               onChange={(value) => updateField("phone", value)}
             />
-
             <SelectField
               label="Subscription"
               value={form.plan}
@@ -188,44 +162,40 @@ export default function TenantForm() {
               options={[
                 ["ENTERPRISE", "Enterprise"],
                 ["PRO", "Pro"],
-                ["BASIC", "Basic"]
+                ["BASIC", "Basic"],
               ]}
               onChange={(value) => updateField("plan", value as Plan)}
             />
-
             <SelectField
               label="Country"
               value={form.country}
               options={[
                 ["India", "India"],
                 ["United States", "United States"],
-                ["United Kingdom", "United Kingdom"]
+                ["United Kingdom", "United Kingdom"],
               ]}
               onChange={(value) => updateField("country", value)}
             />
-
             <SelectField
               label="Time Zone"
               value={form.timeZone}
               options={[
                 ["Asia/Kolkata", "Asia/Kolkata"],
                 ["UTC", "UTC"],
-                ["America/New_York", "America/New_York"]
+                ["America/New_York", "America/New_York"],
               ]}
               onChange={(value) => updateField("timeZone", value)}
             />
-
             <SelectField
               label="Status"
               value={form.status}
               options={[
                 ["ACTIVE", "Active"],
-                ["INACTIVE", "Inactive"]
+                ["INACTIVE", "Inactive"],
               ]}
               onChange={(value) => updateField("status", value as TenantStatus)}
             />
           </div>
-
           {mutationError && (
             <div className="mt-5 rounded-lg border border-red-100 bg-red-50 px-3 py-2.5 text-xs text-red-700">
               {mutationError instanceof Error
@@ -233,7 +203,6 @@ export default function TenantForm() {
                 : "Unable to save tenant."}
             </div>
           )}
-
           <div className="mt-7 flex justify-end gap-2 border-t border-line pt-5">
             <Link
               className="btn btn-secondary"
@@ -254,14 +223,13 @@ export default function TenantForm() {
     </div>
   );
 }
-
 function TextField({
   label,
   value,
   error,
   disabled,
   type = "text",
-  onChange
+  onChange,
 }: {
   label: string;
   value: string;
@@ -284,13 +252,12 @@ function TextField({
     </label>
   );
 }
-
 function SelectField({
   label,
   value,
   error,
   options,
-  onChange
+  onChange,
 }: {
   label: string;
   value: string;

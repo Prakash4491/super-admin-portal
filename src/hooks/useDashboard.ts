@@ -3,33 +3,29 @@ import {
   getActivities,
   getAnalytics,
   getDashboardKpis,
-  getHealth
+  getHealth,
 } from "../services/tenantService";
-
 export function useDashboardKpis() {
   return useQuery({
     queryKey: ["dashboard", "kpis"],
-    queryFn: getDashboardKpis
+    queryFn: getDashboardKpis,
   });
 }
-
 export function useDashboardHealth() {
   return useQuery({
     queryKey: ["dashboard", "health"],
-    queryFn: getHealth
+    queryFn: getHealth,
   });
 }
-
 export function useDashboardAnalytics() {
   return useQuery({
     queryKey: ["dashboard", "analytics"],
-    queryFn: getAnalytics
+    queryFn: getAnalytics,
   });
 }
-
 export function useDashboardActivities() {
   return useQuery({
     queryKey: ["dashboard", "activities"],
-    queryFn: getActivities
+    queryFn: getActivities,
   });
 }

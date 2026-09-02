@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowUp, Eye, Pencil, Power } from "lucide-react";
 import type { Tenant } from "../types";
-
 interface Props {
   tenants: Tenant[];
   sortBy: keyof Tenant;
@@ -12,7 +11,6 @@ interface Props {
   activatingId: number | null;
   deactivatingId: number | null;
 }
-
 export default function TenantTable({
   tenants,
   sortBy,
@@ -21,13 +19,12 @@ export default function TenantTable({
   onActivate,
   onDeactivate,
   activatingId,
-  deactivatingId
+  deactivatingId,
 }: Props) {
   const indicator = (field: keyof Tenant) => {
     if (sortBy !== field) return null;
     return sortDir === "asc" ? <ArrowUp size={12} /> : <ArrowDown size={12} />;
   };
-
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[1050px] border-collapse">
@@ -40,7 +37,7 @@ export default function TenantTable({
               ["plan", "Plan"],
               ["users", "Users"],
               ["status", "Status"],
-              ["createdAt", "Created"]
+              ["createdAt", "Created"],
             ].map(([field, label]) => (
               <th key={field} className="border-b border-line px-4 py-3">
                 <button
@@ -55,7 +52,6 @@ export default function TenantTable({
             <th className="border-b border-line px-4 py-3">Actions</th>
           </tr>
         </thead>
-
         <tbody>
           {tenants.map((tenant) => (
             <tr key={tenant.id} className="hover:bg-slate-50/70">
@@ -121,10 +117,12 @@ export default function TenantTable({
               </td>
             </tr>
           ))}
-
           {tenants.length === 0 && (
             <tr>
-              <td colSpan={8} className="px-4 py-14 text-center text-xs text-slate-400">
+              <td
+                colSpan={8}
+                className="px-4 py-14 text-center text-xs text-slate-400"
+              >
                 No tenants match the current filters.
               </td>
             </tr>
@@ -134,7 +132,6 @@ export default function TenantTable({
     </div>
   );
 }
-
 function StatusBadge({ status }: { status: Tenant["status"] }) {
   return (
     <span

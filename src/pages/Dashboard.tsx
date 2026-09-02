@@ -26,21 +26,17 @@ import {
   useDashboardHealth,
   useDashboardKpis,
 } from "../hooks/useDashboard";
-
 export default function Dashboard() {
   const kpis = useDashboardKpis();
   const health = useDashboardHealth();
   const analytics = useDashboardAnalytics();
   const activities = useDashboardActivities();
-
   if (kpis.isPending) return <Loading text="Loading dashboard..." />;
   if (kpis.isError)
     return <ErrorState error={kpis.error} onRetry={kpis.refetch} />;
-
   return (
     <div className="space-y-6">
       <PageHeading />
-
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <KpiCard
           label="Total Tenants"
@@ -73,7 +69,6 @@ export default function Dashboard() {
           icon={<ShieldCheck size={18} />}
         />
       </section>
-
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <ChartPanel
           title="Tenant Growth"
@@ -101,7 +96,6 @@ export default function Dashboard() {
             </div>
           )}
         </ChartPanel>
-
         <ChartPanel title="Tenant Status" subtitle="Active vs inactive tenants">
           {analytics.isPending || !analytics.data ? (
             <Loading />
@@ -119,9 +113,7 @@ export default function Dashboard() {
             </div>
           )}
         </ChartPanel>
-
         <HealthCard loading={health.isPending} data={health.data} />
-
         <ActivitiesCard
           loading={activities.isPending}
           activities={activities.data ?? []}
@@ -130,7 +122,6 @@ export default function Dashboard() {
     </div>
   );
 }
-
 function PageHeading() {
   return (
     <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -149,7 +140,6 @@ function PageHeading() {
     </div>
   );
 }
-
 function ChartPanel({
   title,
   subtitle,
@@ -171,7 +161,6 @@ function ChartPanel({
     </section>
   );
 }
-
 function HealthCard({
   loading,
   data,
@@ -209,7 +198,6 @@ function HealthCard({
     </section>
   );
 }
-
 function HealthRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between border-b border-slate-100 pb-3 text-xs">
@@ -221,7 +209,6 @@ function HealthRow({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
 function Progress({ label, value }: { label: string; value: number }) {
   return (
     <div>
@@ -238,7 +225,6 @@ function Progress({ label, value }: { label: string; value: number }) {
     </div>
   );
 }
-
 function ActivitiesCard({
   loading,
   activities,

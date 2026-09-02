@@ -1,5 +1,4 @@
 import type { Tenant } from "../types";
-
 export const initialTenants: Tenant[] = [
   {
     id: 1,
@@ -16,7 +15,7 @@ export const initialTenants: Tenant[] = [
     users: 250,
     organizations: 8,
     activeUsers: 218,
-    storage: 64
+    storage: 64,
   },
   {
     id: 2,
@@ -33,7 +32,7 @@ export const initialTenants: Tenant[] = [
     users: 120,
     organizations: 5,
     activeUsers: 101,
-    storage: 42
+    storage: 42,
   },
   {
     id: 3,
@@ -50,7 +49,7 @@ export const initialTenants: Tenant[] = [
     users: 45,
     organizations: 2,
     activeUsers: 32,
-    storage: 27
+    storage: 27,
   },
   {
     id: 4,
@@ -67,7 +66,7 @@ export const initialTenants: Tenant[] = [
     users: 310,
     organizations: 11,
     activeUsers: 276,
-    storage: 71
+    storage: 71,
   },
   {
     id: 5,
@@ -84,7 +83,7 @@ export const initialTenants: Tenant[] = [
     users: 96,
     organizations: 4,
     activeUsers: 84,
-    storage: 35
+    storage: 35,
   },
   {
     id: 6,
@@ -101,7 +100,7 @@ export const initialTenants: Tenant[] = [
     users: 58,
     organizations: 3,
     activeUsers: 39,
-    storage: 31
+    storage: 31,
   },
   {
     id: 7,
@@ -118,7 +117,7 @@ export const initialTenants: Tenant[] = [
     users: 145,
     organizations: 6,
     activeUsers: 127,
-    storage: 49
+    storage: 49,
   },
   {
     id: 8,
@@ -135,7 +134,7 @@ export const initialTenants: Tenant[] = [
     users: 420,
     organizations: 14,
     activeUsers: 385,
-    storage: 76
+    storage: 76,
   },
   {
     id: 9,
@@ -152,7 +151,7 @@ export const initialTenants: Tenant[] = [
     users: 275,
     organizations: 9,
     activeUsers: 244,
-    storage: 62
+    storage: 62,
   },
   {
     id: 10,
@@ -169,7 +168,7 @@ export const initialTenants: Tenant[] = [
     users: 82,
     organizations: 4,
     activeUsers: 55,
-    storage: 28
+    storage: 28,
   },
   {
     id: 11,
@@ -186,7 +185,7 @@ export const initialTenants: Tenant[] = [
     users: 188,
     organizations: 7,
     activeUsers: 161,
-    storage: 46
+    storage: 46,
   },
   {
     id: 12,
@@ -203,6 +202,6 @@ export const initialTenants: Tenant[] = [
     users: 71,
     organizations: 3,
     activeUsers: 62,
-    storage: 25
-  }
+    storage: 25,
+  },
 ];
