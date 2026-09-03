@@ -11,6 +11,10 @@ import {
   Pencil,
   Search,
   XCircle,
+  Upload,
+  Download,
+  RefreshCw,
+  FileText,
 } from "lucide-react";
 import Loading from "../components/Loading";
 import ErrorState from "../components/ErrorState";
@@ -91,6 +95,43 @@ export default function OrganizationList() {
         current.sortBy === field && current.sortDir === "asc" ? "desc" : "asc",
     }));
   };
+  const handleExport = () => {
+    const data = organizations.data?.content ?? [];
+    const headers = [
+      "Organization",
+      "Tenant",
+      "Code",
+      "Users",
+      "Status",
+      "Created",
+    ];
+    const rows = data.map((organization) => [
+      organization.name,
+      organization.tenantName,
+      organization.code,
+      organization.users,
+      organization.status,
+      organization.createdAt,
+    ]);
+    const csv = [
+      headers.join(","),
+      ...rows.map((row) =>
+        row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(","),
+      ),
+    ].join("\n");
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "organization-report.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+  const handleRefresh = () => {
+    organizations.refetch();
+  };
   if (organizations.isPending) {
     return <Loading text="Loading organizations..." />;
   }
@@ -100,26 +141,24 @@ export default function OrganizationList() {
     );
   }
   const data = organizations.data;
+  const totalCompanies = data.totalElements;
+  const businessUnits = 12;
+  const departments = 28;
+  const branches = 16;
+  const costCenters = 14;
+  const locations = 9;
   return (
     <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="text-2xl font-extrabold text-red-500 tracking-tight">
+          <h2 className="text-2xl font-extrabold tracking-tight text-red-500">
             ORGANIZATION MANAGEMENT
           </h2>
-          <p className="mt-1 font-extrabold text-sm text-black-500">
-            Manage organizations across all tenants.{" "}
+          <p className="mt-1 text-sm font-extrabold text-black-500">
+            Manage organizations across all tenants.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowCreateForm(true)}
-          className="inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700"
-        >
-          <Plus size={17} />
-          Create Organization
-        </button>
-      </div>
+      </section>
       {showCreateForm && (
         <CreateOrganizationModal
           form={form}
@@ -179,46 +218,79 @@ export default function OrganizationList() {
           }}
         />
       )}
-      <section className="panel p-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <div className="relative">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
-            <input
-              value={params.search}
-              onChange={(event) => handleSearch(event.target.value)}
-              placeholder="Search organizations..."
-              className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none focus:border-blue-400"
-            />
-          </div>
-          <select
-            value={params.tenantId}
-            onChange={(event) => handleTenantChange(event.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-400"
+      <section>
+        <h3 className="mb-3 text-sm font-extrabold text-slate-800">
+          Organization Overview
+        </h3>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
+          <OverviewCard label="Total Companies" value={totalCompanies} />
+          <OverviewCard label="Business Units" value={businessUnits} />
+          <OverviewCard label="Departments" value={departments} />
+          <OverviewCard label="Branches" value={branches} />
+          <OverviewCard label="Cost Centers" value={costCenters} />
+          <OverviewCard label="Locations" value={locations} />
+        </div>
+      </section>
+      <section className="panel p-5">
+        <h3 className="mb-4 text-sm font-extrabold text-slate-800">
+          Quick Actions
+        </h3>
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => setShowCreateForm(true)}
+            className="inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-blue-700"
           >
-            <option value="">All Tenants</option>
-            {initialTenants.map((tenant) => (
-              <option key={tenant.id} value={tenant.id}>
-                {tenant.name}
-              </option>
-            ))}
-          </select>
-          <select
-            value={params.status}
-            onChange={(event) =>
-              handleStatusChange(event.target.value as OrganizationStatus | "")
-            }
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-400"
+            <Plus size={15} />
+            Create Organization
+          </button>
+          <button
+            type="button"
+            className="inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50"
           >
-            <option value="">All Statuses</option>
-            <option value="ACTIVE">Active</option>
-            <option value="INACTIVE">Inactive</option>
-          </select>
+            <Upload size={15} />
+            Import
+          </button>
+          <button
+            type="button"
+            onClick={handleExport}
+            className="inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50"
+          >
+            <Download size={15} />
+            Export
+          </button>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            className="inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50"
+          >
+            <RefreshCw size={15} />
+            Refresh
+          </button>
+        </div>
+      </section>
+      <section className="panel p-5">
+        <h3 className="mb-4 text-sm font-extrabold text-slate-800">
+          Organization Management
+        </h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ManagementCard label="Company Setup" />
+          <ManagementCard label="Business Units" />
+          <ManagementCard label="Departments" />
+          <ManagementCard label="Branches" />
+          <ManagementCard label="Cost Centres" />
+          <ManagementCard label="Locations" />
         </div>
       </section>
       <section className="panel overflow-hidden">
+        <div className="border-b border-slate-200 p-5">
+          <h3 className="text-sm font-extrabold text-slate-800">
+            Recent Organizations
+          </h3>
+          <p className="mt-1 text-xs text-slate-500">
+            Organizations registered across the enterprise.
+          </p>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[850px]">
             <thead className="border-b border-slate-200 bg-slate-50">
@@ -309,6 +381,7 @@ export default function OrganizationList() {
                         <button
                           type="button"
                           onClick={() => setEditingOrganization(organization)}
+                          title="Edit"
                           className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                         >
                           <Pencil size={15} />
@@ -388,7 +461,100 @@ export default function OrganizationList() {
           </div>
         </div>
       </section>
+      <section className="panel p-5">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-800">
+              Search & Filters
+            </h3>
+            <p className="mt-1 text-xs text-slate-500">
+              Find organizations by name, tenant, or status.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={resetPage}
+            className="text-xs font-bold text-blue-600 hover:text-blue-700"
+          >
+            Reset
+          </button>
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="relative">
+            <Search
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            />
+            <input
+              value={params.search}
+              onChange={(event) => handleSearch(event.target.value)}
+              placeholder="Search organizations..."
+              className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none focus:border-blue-400"
+            />
+          </div>
+          <select
+            value={params.tenantId}
+            onChange={(event) => handleTenantChange(event.target.value)}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-400"
+          >
+            <option value="">All Tenants</option>
+            {initialTenants.map((tenant) => (
+              <option key={tenant.id} value={tenant.id}>
+                {tenant.name}
+              </option>
+            ))}
+          </select>
+          <select
+            value={params.status}
+            onChange={(event) =>
+              handleStatusChange(event.target.value as OrganizationStatus | "")
+            }
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-400"
+          >
+            <option value="">All Statuses</option>
+            <option value="ACTIVE">Active</option>
+            <option value="INACTIVE">Inactive</option>
+          </select>
+        </div>
+      </section>
+      <section className="panel flex flex-row items-center justify-end gap-3 p-5">
+        <button
+          type="button"
+          onClick={handleExport}
+          className="inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-50"
+        >
+          <Download size={15} />
+          View Reports
+        </button>
+        <button
+          type="button"
+          onClick={handleRefresh}
+          className="inline-flex w-fit items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-blue-700"
+        >
+          <RefreshCw size={15} />
+          Refresh
+        </button>
+      </section>
     </div>
+  );
+}
+function OverviewCard({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="panel p-5">
+      <p className="text-xs font-bold text-slate-500">{label}</p>
+      <p className="mt-2 text-2xl font-extrabold text-slate-900">{value}</p>
+    </div>
+  );
+}
+function ManagementCard({ label }: { label: string }) {
+  return (
+    <button
+      type="button"
+      className="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 text-left text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50"
+    >
+      <span className="h-2 w-2 shrink-0 rounded-full bg-blue-500" />
+      {label}
+    </button>
   );
 }
 function TableHeader({
@@ -418,11 +584,7 @@ function StatusBadge({ status }: { status: OrganizationStatus }) {
         active ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
       }`}
     >
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${
-          active ? "bg-emerald-500" : "bg-red-500"
-        }`}
-      />
+      {active ? <CheckCircle2 size={13} /> : <XCircle size={13} />}
       {active ? "Active" : "Inactive"}
     </span>
   );
@@ -462,7 +624,7 @@ function CreateOrganizationModal({
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <div>
             <h3 className="text-lg font-extrabold">Create Organization</h3>
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-black-400">
               Add a new organization to a tenant.
             </p>
           </div>
@@ -570,12 +732,12 @@ function CreateOrganizationModal({
             </div>
           )}
         </div>
-        <div className="flex justify-end gap-3 border-t border-slate-200 p-5">
+        <div className="flex flex-row justify-end gap-3 border-t border-slate-200 p-5">
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50"
+            className="inline-flex w-fit whitespace-nowrap rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50"
           >
             Cancel
           </button>
@@ -583,7 +745,7 @@ function CreateOrganizationModal({
             type="button"
             onClick={onSubmit}
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50"
+            className="inline-flex w-fit whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create Organization"}
           </button>
@@ -720,12 +882,12 @@ function EditOrganizationModal({
             </div>
           )}
         </div>
-        <div className="flex justify-end gap-3 border-t border-slate-200 p-5">
+        <div className="flex flex-row justify-end gap-3 border-t border-slate-200 p-5">
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50"
+            className="inline-flex w-fit whitespace-nowrap rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50"
           >
             Cancel
           </button>
@@ -733,7 +895,7 @@ function EditOrganizationModal({
             type="button"
             onClick={() => onSubmit(form)}
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50"
+            className="inline-flex w-fit whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>

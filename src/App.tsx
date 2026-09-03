@@ -15,6 +15,8 @@ import PermissionDetails from "./pages/PermissionDetails";
 import DataPermissions from "./pages/DataPermissions";
 import DataPermissionDetails from "./pages/DataPermissionDetails";
 import PlatformConfiguration from "./pages/PlatformConfiguration";
+import FeatureManagement from "./pages/FeatureManagement";
+import LicenseManagement from "./pages/LicenseManagement";
 export default function App() {
   return (
     <Routes>
@@ -33,6 +35,8 @@ export default function App() {
         <Route path="/permissions" element={<PermissionList />} />
         <Route path="/permissions/:id" element={<PermissionDetails />} />
         <Route path="/dataPermissions" element={<DataPermissions />} />
+        <Route path="/feature-management" element={<FeatureManagement />} />
+        <Route path="/license-management" element={<LicenseManagement />} />
         <Route
           path="/platform-configuration"
           element={<PlatformConfiguration />}

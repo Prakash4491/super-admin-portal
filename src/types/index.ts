@@ -6,6 +6,25 @@ export type UserRole = "ADMIN" | "MANAGER" | "USER";
 export type RoleStatus = "ACTIVE" | "INACTIVE";
 export type PermissionStatus = "ACTIVE" | "INACTIVE";
 export type DataPermissionStatus = "ACTIVE" | "INACTIVE";
+export type FeatureStatus = "ENABLED" | "DISABLED";
+export type LicenseStatus = "ACTIVE" | "EXPIRING" | "EXPIRED" | "SUSPENDED";
+
+export type License = {
+  id: number;
+  licenseKey: string;
+  organization: string;
+  licenseType: string;
+  expiryDate: string;
+  status: LicenseStatus;
+};
+export type Feature = {
+  id: number;
+  name: string;
+  module: string;
+  licensePlan: string;
+  status: FeatureStatus;
+  description: string;
+};
 export type SMTPConfiguration = {
   host: string;
   port: number;

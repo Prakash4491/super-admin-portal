@@ -8,6 +8,7 @@ import {
   Menu,
   X,
   Settings,
+  CreditCard,
 } from "lucide-react";
 import { Users } from "lucide-react";
 export default function Layout() {
@@ -59,6 +60,16 @@ export default function Layout() {
           to="/platform-configuration"
           icon={<Settings size={17} />}
           label="Platform Configuration"
+        />
+        <NavItem
+          to="/feature-management"
+          icon={<Settings size={17} />}
+          label="Feature Management"
+        />
+        <NavItem
+          to="/license-management"
+          icon={<CreditCard size={17} />}
+          label="License Management"
         />
         <div className="mt-auto flex items-center gap-2 px-2 text-xs text-slate-300">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -141,6 +152,18 @@ export default function Layout() {
               to="/platform-configuration"
               icon={<Settings size={17} />}
               label="Platform Configuration"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <NavItem
+              to="/feature-management"
+              icon={<Settings size={17} />}
+              label="Feature Management"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <NavItem
+              to="/license-management"
+              icon={<CreditCard size={17} />}
+              label="License Management"
               onClick={() => setMobileMenuOpen(false)}
             />
             <div className="absolute bottom-6 left-5 flex items-center gap-2 text-xs text-slate-300">
