@@ -8,7 +8,41 @@ export type PermissionStatus = "ACTIVE" | "INACTIVE";
 export type DataPermissionStatus = "ACTIVE" | "INACTIVE";
 export type FeatureStatus = "ENABLED" | "DISABLED";
 export type LicenseStatus = "ACTIVE" | "EXPIRING" | "EXPIRED" | "SUSPENDED";
-
+export type AuditLogStatus = "SUCCESS" | "FAILED";
+export type GlobalSettings = {
+  defaultLanguage: string;
+  timeZone: string;
+  dateFormat: string;
+  timeFormat: string;
+  defaultCurrency: string;
+  passwordExpiry: number;
+  sessionTimeout: number;
+  maximumLoginAttempts: number;
+  multiFactorAuthentication: boolean;
+  emailNotifications: boolean;
+  smsNotifications: boolean;
+  pushNotifications: boolean;
+  maximumFileUploadSize: number;
+  defaultTheme: string;
+  maintenanceMode: boolean;
+  lastUpdatedBy: string;
+  lastUpdatedOn: string;
+};
+export type AuditLog = {
+  id: number;
+  logId: string;
+  organization: string;
+  module: string;
+  eventType: string;
+  username: string;
+  performedBy: string;
+  time: string;
+  actionTime: string;
+  ipAddress: string;
+  status: AuditLogStatus;
+  remarks: string;
+  archived: boolean;
+};
 export type License = {
   id: number;
   licenseKey: string;

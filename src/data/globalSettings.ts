@@ -1,0 +1,20 @@
+import type { GlobalSettings } from "../types";
+export const initialGlobalSettings: GlobalSettings = {
+  defaultLanguage: "English",
+  timeZone: "Asia/Kolkata (UTC +05:30)",
+  dateFormat: "DD/MM/YYYY",
+  timeFormat: "24 Hours",
+  defaultCurrency: "INR (₹)",
+  passwordExpiry: 90,
+  sessionTimeout: 30,
+  maximumLoginAttempts: 5,
+  multiFactorAuthentication: true,
+  emailNotifications: true,
+  smsNotifications: true,
+  pushNotifications: true,
+  maximumFileUploadSize: 100,
+  defaultTheme: "Light",
+  maintenanceMode: false,
+  lastUpdatedBy: "Super Administrator",
+  lastUpdatedOn: "31-Jul-2026 09:30 AM",
+};

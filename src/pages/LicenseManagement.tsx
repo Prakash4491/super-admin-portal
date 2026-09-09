@@ -112,7 +112,7 @@ export default function LicenseManagement() {
         <h2 className="text-2xl font-extrabold tracking-tight text-red-500">
           LICENSE MANAGEMENT
         </h2>
-        <p className="mt-1 text-sm font-semibold text-slate-500">
+        <p className="mt-1 text-sm font-extrabold text-black-500">
           Manage software licenses across tenants and organizations.
         </p>
       </section>

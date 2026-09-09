@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { logout } from "../services/authService";
 import {
   Building2,
   KeyRound,
@@ -9,9 +10,19 @@ import {
   X,
   Settings,
   CreditCard,
+  ClipboardList,
+  Globe2,
 } from "lucide-react";
 import { Users } from "lucide-react";
 export default function Layout() {
+  const navigate = useNavigate();
+  function handleLogout() {
+    logout();
+
+    navigate("/login", {
+      replace: true,
+    });
+  }
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <div className="min-h-screen bg-page">
@@ -28,7 +39,7 @@ export default function Layout() {
         {/* Desktop Navigation */}
         <nav className="space-y-1.5">
           <NavItem
-            to="/"
+            to="/dashboard"
             icon={<LayoutDashboard size={17} />}
             label="Dashboard"
             end
@@ -71,6 +82,16 @@ export default function Layout() {
           icon={<CreditCard size={17} />}
           label="License Management"
         />
+        <NavItem
+          to="/audit-logs"
+          icon={<ClipboardList size={17} />}
+          label="Audit Logs"
+        />
+        <NavItem
+          to="/global-settings"
+          icon={<Globe2 size={17} />}
+          label="Global Settings"
+        />
         <div className="mt-auto flex items-center gap-2 px-2 text-xs text-slate-300">
           <span className="h-2 w-2 rounded-full bg-emerald-500" />
           Platform online
@@ -105,7 +126,7 @@ export default function Layout() {
             {/* Mobile Navigation */}
             <nav className="space-y-1.5">
               <NavItem
-                to="/"
+                to="/dashboard"
                 icon={<LayoutDashboard size={17} />}
                 label="Dashboard"
                 end
@@ -166,6 +187,18 @@ export default function Layout() {
               label="License Management"
               onClick={() => setMobileMenuOpen(false)}
             />
+            <NavItem
+              to="/audit-logs"
+              icon={<ClipboardList size={17} />}
+              label="Audit Logs"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <NavItem
+              to="/global-settings"
+              icon={<Globe2 size={17} />}
+              label="Global Settings"
+              onClick={() => setMobileMenuOpen(false)}
+            />
             <div className="absolute bottom-6 left-5 flex items-center gap-2 text-xs text-slate-300">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               Platform online
@@ -201,6 +234,13 @@ export default function Layout() {
             <div className="grid h-9 w-9 place-items-center rounded-full bg-slate-100 text-[11px] font-extrabold">
               SA
             </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50"
+            >
+              Logout
+            </button>
           </div>
         </header>
         <main className="mx-auto max-w-[1500px] p-5 pb-8 md:p-8">
@@ -210,6 +250,7 @@ export default function Layout() {
     </div>
   );
 }
+
 function NavItem({
   to,
   icon,
